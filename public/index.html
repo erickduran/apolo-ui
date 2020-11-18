@@ -1,0 +1,97 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- Scripts -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js" integrity="sha512-d9xgZrVZpmmQlfonhQUvTR7lMPtO7NkZMkA0ABN3PHCbKA5nqylQ/yWlFAyY6hYgdF1Qh6nYiuADWwKB4C2WSw==" crossorigin="anonymous"></script>
+    <!-- <script src="js/functions.js"></script>    -->
+    <script src="js/main.js"></script>
+    <script src="js/meter.js"></script>
+
+    <!-- Custom styles for this template -->
+      <link href="css/styles.css" rel="stylesheet">
+      <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css">
+      <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+      <link rel="icon" type="image/png" href="icon.png">
+
+      <!-- Custom fonts for this template -->
+      <link href="https://fonts.googleapis.com/css?family=Playfair+Display:400,400i,700i,700,900" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet"> 
+
+      <title>Apolo</title>
+
+  </head>
+  <body>
+    <div class="section" id="master">
+      <div class="section-container">
+        <h1>Apolo.</h1><br>
+        
+        <button class="button" id="button-notes" type="button" value="4" onclick="inputNotes(this);">NÚMERO DE NOTAS: 4</button><br>
+        <button class="button" id="button-bpm" type="button" value="100" onclick="inputBPM(this);">TEMPO: 100 BPM</button><br>
+        <button class="button" id="button-bpb" type="button" value="4" onclick="inputBPB(this);">COMPÁS: 4 BPB</button><br>
+        <button class="button" id="button-tolerance" type="button" value="50" onclick="inputTolerance(this);">TOLERANCIA: 50%</button><br>
+        <button class="button toggle-button" id="button-training" type="button" value="0" onclick="toggleTraining(this);">ENTRENAMIENTO: OFF</button><br>
+        <button class="button toggle-button" id="button-beat" type="button" value="1" onclick="toggleBeat(this);">ACENTO: ON</button><br>
+        <button class="button" id="button-start" type="button" onclick="start(this);">COMENZAR</button><br><br><br>
+        <div class="circle-a">
+          <a class="js-scroll-trigger" href="#about">
+            <div class="circle small blue animated"></div>
+          </a>
+        </div>
+      </div>    
+    </div>
+
+    <div class="section" id="action">
+      <div class="section-container" id="action-container" style="display: none">
+        <div class="circle-a">
+          <a class="js-scroll-trigger" href="#master">
+            <div class="circle purple small animated-inverse"></div>
+          </a>
+        </div>
+        <br><br>
+        <div id="counter-container">
+          <div id="counter" value="precount"></div>
+        </div>
+        <br>
+        <div id="result-container" style="display: none;">
+          <div id="graph-container">
+            <canvas id="graph" style="display: block; height: 250px; width: 500px;" width="1000" height="500"></canvas>
+          </div>
+          <br>
+          <div id="result" value="1"></div>
+          <br>
+        </div>
+        <br>
+        <div class="circle-a">
+          <a class="js-scroll-trigger" href="#about">
+            <div class="circle small blue animated"></div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="about">
+      <div class="section-container" id="about-container">
+        <div class="circle-a">
+          <a class="js-scroll-trigger" href="#master">
+            <div class="circle purple small animated-inverse"></div>
+          </a>
+        </div>
+        <br>
+        <button class="button button-purple" id="button-test-audio" type="button" onclick="testAudio();">PROBAR AUDIO</button><br>
+        <button class="button toggle-button button-purple" id="button-test-mic" type="button" value="0" onclick="toggleTestMic(this);">PROBAR MICRÓFONO</button><div class="mic-level-container" id="mic-level-container"><canvas id="meter" width="500" height="50"></canvas></div>
+        <br><br>
+        Creado y desarrollado por <a href="https://erickduran.com">Erick Durán</a>.
+      </div>
+    </div>
+
+    <!-- Footer -->
+      <footer>
+        <div class="container-footer">
+          <p>Copyright &copy; <a href="https://erickduran.com" class="discrete">Erick Durán</a> 2020</p>
+        </div>
+      </footer>
+  </body>
+</html>
