@@ -2,8 +2,9 @@ var running = false;
 var showingResults = false;
 var showingAction = false;
 var showingCounter = false;
+var apiUrl = 'http://localhost:8080';
 
-function handleResult(training, intensities, tolerance, evaluation){
+async function handleResult(training, intensities, tolerance, evaluation){
 	var resultObject = document.getElementById("result");
 	resultObject.style.color = '#C0C0C0';
 	resultObject.innerHTML = "Procesando..."
@@ -13,33 +14,53 @@ function handleResult(training, intensities, tolerance, evaluation){
 	}
 
 	if (!training) {
-		var result = getResult(payload);
-		var goodPhrase = false;
-		if (result['value'] > tolerance/100) {
-			goodPhrase = true;
-		}
-
-		if (goodPhrase) {
-			resultObject.value = "1";
-			resultObject.innerHTML = "HOMOGÉNEA"
-			resultObject.style.color = '#2E8B57';
-		}
-		else {
-			resultObject.value = "0";
-			resultObject.innerHTML = "NO HOMOGÉNEA"
-			resultObject.style.color = '#B22222';
-		}
+		evaluateResult(payload, tolerance);
 	}
 	else {
 		payload['evaluation'] = evaluation;
 		// post result
 		resultObject.innerHTML = "Enviado"
 	}
-	
 }
 
-function getResult(values) {
-	return false;
+function setResult(result, tolerance) {
+	var resultObject = document.getElementById("result");
+	var goodPhrase = false;
+	console.log("RESULT: " + result)
+	if (result >= 1-tolerance/100) {
+		console.log('Good!')
+		goodPhrase = true;
+	}
+	else {
+		console.log('Bad!')
+	}
+
+	if (goodPhrase) {
+		resultObject.value = "1";
+		resultObject.innerHTML = "HOMOGÉNEA"
+		resultObject.style.color = '#2E8B57';
+	}
+	else {
+		resultObject.value = "0";
+		resultObject.innerHTML = "NO HOMOGÉNEA"
+		resultObject.style.color = '#B22222';
+	}
+}
+
+async function evaluateResult(payload, tolerance) {
+	var data = JSON.stringify(payload);
+	$.ajax({
+	    url: apiUrl,
+	    type: 'post',
+	    data: data,
+	    headers: {
+	    	'Content-Type': 'application/json'
+	    },
+	    dataType: 'json',
+	    success: function (data) {
+	    	setResult(data['value'], tolerance);
+	    }
+	});
 }
 
 function indexOfMax(arr) {
@@ -155,7 +176,12 @@ async function startEvaluation(training, bpm, bpb, phrase, beat, tolerance) {
 	// if training
 	var evaluation = false;
 
-	handleResult(training, phraseIntensities, tolerance, evaluation);
+	var values = []
+	for (var i = 0; i < phraseIntensities.length; i++) {
+		values.push(windowIntensities[phraseIntensities[i]])
+	}
+
+	handleResult(training, values, tolerance, evaluation);
     // if training:
     //     launcher.ask_for_result(phrase_intensities)
     // else:
@@ -176,7 +202,7 @@ function mobileCheck() {
 };
 
 document.addEventListener('DOMContentLoaded', function(){
-	// alert(mobileCheck());	
+	// alert(mobileCheck());
 }, false);
 
 
