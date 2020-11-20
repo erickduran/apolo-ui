@@ -2,7 +2,7 @@ var running = false;
 var showingResults = false;
 var showingAction = false;
 var showingCounter = false;
-var apiUrl = 'http://localhost:8080';
+var apiUrl = 'https://api.apolo.erickduran.com';
 
 async function handleResult(training, intensities, tolerance, evaluation){
 	var resultObject = document.getElementById("result");
@@ -18,7 +18,7 @@ async function handleResult(training, intensities, tolerance, evaluation){
 	}
 	else {
 		payload['evaluation'] = evaluation;
-		// post result
+		// TODO: post result
 		resultObject.innerHTML = "Enviado"
 	}
 }
@@ -173,26 +173,14 @@ async function startEvaluation(training, bpm, bpb, phrase, beat, tolerance) {
 
 	drawGraph(windowIntensities, phraseIntensities);
 
-	// if training
 	var evaluation = false;
-
 	var values = []
+
 	for (var i = 0; i < phraseIntensities.length; i++) {
 		values.push(windowIntensities[phraseIntensities[i]])
 	}
 
 	handleResult(training, values, tolerance, evaluation);
-    // if training:
-    //     launcher.ask_for_result(phrase_intensities)
-    // else:
-    //     result = get_result(phrase_intensities)
-
-    //     if result > 0.5:
-    //         launcher.set_result(True)
-    //     else:
-    //         launcher.set_result(False)
-
-    //     launcher.set_info(phrase_intensities)
 }
 
 function mobileCheck() {
@@ -202,7 +190,9 @@ function mobileCheck() {
 };
 
 document.addEventListener('DOMContentLoaded', function(){
-	// alert(mobileCheck());
+	if (mobileCheck()) {
+		alert('Esta página no ha sido probada en versión móvil...');
+	}
 }, false);
 
 
@@ -380,14 +370,15 @@ function inputTolerance(object) {
 }
 
 function toggleTraining(object) {
-	if (object.value == '0') {
-		object.value = '1';
-		object.innerHTML = 'ENTRENAMIENTO: ON';
-	}
-	else {
-		object.value = '0';
-		object.innerHTML = 'ENTRENAMIENTO: OFF';
-	}
+	alert('Entrenamiento no disponible temporalmente...');
+	// if (object.value == '0') {
+	// 	object.value = '1';
+	// 	object.innerHTML = 'ENTRENAMIENTO: ON';
+	// }
+	// else {
+	// 	object.value = '0';
+	// 	object.innerHTML = 'ENTRENAMIENTO: OFF';
+	// }
 }
 
 function toggleBeat(object) {
@@ -461,24 +452,16 @@ async function start(object) {
 }
 
 $(document).ready(function(){
-  // Add smooth scrolling to all links
   $("a").on('click', function(event) {
-
-    // Make sure this.hash has a value before overriding default behavior
     if (this.hash !== "") {
-      // Prevent default anchor click behavior
       event.preventDefault();
-
-      // Store hash
       var hash = this.hash;
 
-      // Using jQuery's animate() method to add smooth page scroll
-      // The optional number (800) specifies the number of milliseconds it takes to scroll to the specified area
       $('html, body').animate({
         scrollTop: $(hash).offset().top
       }, 800, function(){
    
       });
-    } // End if
+    }
   });
 });
