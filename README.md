@@ -2,6 +2,9 @@
 This repository hosts the source code of the Apolo web UI version (v4.0).
 
 ## Usage
+Refer to [these docs](docs/).
+
+## Development
 ### Prerequisites
 ```bash
 npm install -g firebase-tools

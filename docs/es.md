@@ -2,6 +2,14 @@
 
 > Este documento enlista las instrucciones de uso para [Apolo](https://apolo.erickduran.com).
 
+## Tabla de contenido
+- [Uso](#uso)
+- [Detalles de parámetros](#detalles-de-parámetros)
+- [Interpretación de resultados](#interpretación-de-resultados)
+	- [Datos mostrados](#datos-mostrados)
+	- [Consideraciones](#consideraciones)
+- [Acerca de](#acerca-de)
+
 ## Uso
 
 1. Ir a https://apolo.erickduran.com.
@@ -65,11 +73,12 @@ Cuando la evaluación termina, se muestra una gráfica junto con el resultado de
 - Los puntos indicados como "valores utilizados" (signo `+`) son las intensidades que se utilizaron para hacer la evaluación. Estos son colocados en el punto aproximado en el que sonó el metrónomo (máximos locales).
 - Al pie de la gráfica se muestra el resultado de la predicción de Apolo (homogénea o no homogénea).
 
-
-
 ### Consideraciones
 
 - El resultado de la predicción es una estimación calculada a través de una red neuronal previamente entrenada mediante una base de datos.
 - Es recomendable comparar la predicción y la gráfica para complementar los resultados.
 - Es recomendable consultar los resultados con un instructor.
 - La base de datos actual se encuentra en desarollo, los resultados de las predicciones irán mejorando mientras los datos aumenten.
+
+## Acerca de
+Este software fue creado y desarollado por Erick Durán bajo la licencia MIT. Copyright © 2020. Para cualquier duda o comentario enviar un correo a [me@erickduran.com](mailto:me@erickduran.com).
