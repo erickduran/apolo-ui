@@ -2,8 +2,7 @@ var running = false;
 var showingResults = false;
 var showingAction = false;
 var showingCounter = false;
-// var apiUrl = 'https://api.apolo.erickduran.com';
-var apiUrl = 'http://localhost:8080';
+var apiUrl = 'https://api.apolo.erickduran.com';
 
 async function handleResult(training, intensities, tolerance){
 	var resultObject = document.getElementById("result");
