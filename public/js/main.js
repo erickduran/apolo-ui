@@ -2,9 +2,10 @@ var running = false;
 var showingResults = false;
 var showingAction = false;
 var showingCounter = false;
-var apiUrl = 'https://api.apolo.erickduran.com';
+// var apiUrl = 'https://api.apolo.erickduran.com';
+var apiUrl = 'http://localhost:8080';
 
-async function handleResult(training, intensities, tolerance, evaluation){
+async function handleResult(training, intensities, tolerance){
 	var resultObject = document.getElementById("result");
 	resultObject.style.color = '#C0C0C0';
 	resultObject.innerHTML = "Procesando..."
@@ -17,8 +18,28 @@ async function handleResult(training, intensities, tolerance, evaluation){
 		evaluateResult(payload, tolerance);
 	}
 	else {
-		payload['evaluation'] = evaluation;
-		// TODO: post result
+		var cookie = prompt("Ingresa tu constraseña", "");
+		var result = prompt("Ingresa el resultado (1 para homogénea, 0 para no homogénea)", "");
+
+		if (result == "1") {
+			payload['result'] = 1.0;
+		}
+		else if (result == "0") {
+			payload['result'] = 0.0;
+		}
+		else {
+			alert('Valor inválido');
+			return;
+		}
+
+		if (cookie != null) {
+			payload['cookie'] = cookie;
+		}
+		else {
+			alert('Valor inválido');
+		}
+
+		postResult(payload);
 		resultObject.innerHTML = "Enviado"
 	}
 }
@@ -47,6 +68,20 @@ function setResult(result, tolerance) {
 	}
 }
 
+function setSent(success) {
+	var resultObject = document.getElementById("result");
+	if (success) {
+		resultObject.value = "1";
+		resultObject.innerHTML = "Enviado"
+		resultObject.style.color = '#2E8B57';
+	}
+	else {
+		resultObject.value = "0";
+		resultObject.innerHTML = "Ocurrió un error al enviar"
+		resultObject.style.color = '#B22222';
+	}
+}
+
 async function evaluateResult(payload, tolerance) {
 	var data = JSON.stringify(payload);
 	$.ajax({
@@ -59,6 +94,28 @@ async function evaluateResult(payload, tolerance) {
 	    dataType: 'json',
 	    success: function (data) {
 	    	setResult(data['value'], tolerance);
+	    },
+	    error: function (data) {
+	    	setSent(false);
+	    }
+	});
+}
+
+async function postResult(payload) {
+	var data = JSON.stringify(payload);
+	$.ajax({
+	    url: apiUrl + "/train",
+	    type: 'post',
+	    data: data,
+	    headers: {
+	    	'Content-Type': 'application/json'
+	    },
+	    dataType: 'json',
+	    success: function (data) {
+	    	setSent(true);
+	    },
+	    error: function (data) {
+	    	setSent(false);
 	    }
 	});
 }
@@ -173,14 +230,13 @@ async function startEvaluation(training, bpm, bpb, phrase, beat, tolerance) {
 
 	drawGraph(windowIntensities, phraseIntensities);
 
-	var evaluation = false;
 	var values = []
 
 	for (var i = 0; i < phraseIntensities.length; i++) {
 		values.push(windowIntensities[phraseIntensities[i]])
 	}
 
-	handleResult(training, values, tolerance, evaluation);
+	handleResult(training, values, tolerance);
 }
 
 function mobileCheck() {
@@ -370,15 +426,14 @@ function inputTolerance(object) {
 }
 
 function toggleTraining(object) {
-	alert('Entrenamiento no disponible temporalmente...');
-	// if (object.value == '0') {
-	// 	object.value = '1';
-	// 	object.innerHTML = 'ENTRENAMIENTO: ON';
-	// }
-	// else {
-	// 	object.value = '0';
-	// 	object.innerHTML = 'ENTRENAMIENTO: OFF';
-	// }
+	if (object.value == '0') {
+		object.value = '1';
+		object.innerHTML = 'ENTRENAMIENTO: ON';
+	}
+	else {
+		object.value = '0';
+		object.innerHTML = 'ENTRENAMIENTO: OFF';
+	}
 }
 
 function toggleBeat(object) {
