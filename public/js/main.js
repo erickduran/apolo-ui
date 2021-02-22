@@ -4,6 +4,9 @@ var showingAction = false;
 var showingCounter = false;
 var apiUrl = 'https://api.apolo.erickduran.com';
 
+var gWindowIntensities = [];
+var gPhraseIntensities = [];
+
 async function handleResult(training, intensities, tolerance){
 	var resultObject = document.getElementById("result");
 	resultObject.style.color = '#C0C0C0';
@@ -135,6 +138,8 @@ function indexOfMax(arr) {
 }
 
 async function startEvaluation(training, bpm, bpb, phrase, beat, tolerance) {
+	gWindowIntensities = []
+	gPhraseIntensities = []
 	if (!showingAction) {
 		var x = document.getElementById("action-container");
 		if (x.style.display === "none") {
@@ -148,6 +153,12 @@ async function startEvaluation(training, bpm, bpb, phrase, beat, tolerance) {
 		if (x.style.display != "none") {
 		  x.style.display = "none";
 		}
+
+		var graphCanvas = document.getElementById("graph");
+		if (graphCanvas.style.display != "none") {
+		  graphCanvas.style.display = "none";
+		}
+
 		showingResults = false;
 	}
 
@@ -227,7 +238,9 @@ async function startEvaluation(training, bpm, bpb, phrase, beat, tolerance) {
     	phraseIntensities.push(maxIndex);
 	}
 
-	drawGraph(windowIntensities, phraseIntensities);
+	showResults(windowIntensities, phraseIntensities);
+	gWindowIntensities = windowIntensities;
+	gPhraseIntensities = phraseIntensities;
 
 	var values = []
 
@@ -235,7 +248,18 @@ async function startEvaluation(training, bpm, bpb, phrase, beat, tolerance) {
 		values.push(windowIntensities[phraseIntensities[i]])
 	}
 
+	var valuesContainer = document.getElementById('values-container');
+	valuesContainer.innerHTML = buildValues(values);
+
 	handleResult(training, values, tolerance);
+}
+
+function buildValues(values) {
+	var string = '';
+	for (var i = 0; i < values.length; i++) {
+		string = string + values[i] + '<br>';
+	}
+	return string;
 }
 
 function mobileCheck() {
@@ -251,35 +275,30 @@ document.addEventListener('DOMContentLoaded', function(){
 }, false);
 
 
-function drawGraph(windowIntensities, phraseIntensities) {
-	if (showingCounter) {
-		var x = document.getElementById("counter-container");
-		if (x.style.display != "none") {
-		  x.style.display = "none";
-		}
-		showingCounter = false;
+function showGraph() {
+	var button = document.getElementById("button-graph");
+	if (button.style.display != "none") {
+	  button.style.display = "none";
 	}
 
-	if (!showingResults) {
-		var x = document.getElementById("result-container");
-		if (x.style.display === "none") {
-		  x.style.display = "block";
-		}
-		showingResults = true;
+	var graphCanvas = document.getElementById("graph");
+	if (graphCanvas.style.display === "none") {
+	  graphCanvas.style.display = "block";
 	}
-	allData = []
-	dataUsed = []
-	for (var i = 0; i < windowIntensities.length; i ++){
+
+	var allData = []
+	var dataUsed = []
+	for (var i = 0; i < gWindowIntensities.length; i ++){
 		allData.push({
 			'x': i,
-			'y': windowIntensities[i]
+			'y': gWindowIntensities[i]
 		});
 	}
 
-	for (var i = 0; i < phraseIntensities.length; i ++){
+	for (var i = 0; i < gPhraseIntensities.length; i ++){
 		dataUsed.push({
-			'x': phraseIntensities[i],
-			'y': windowIntensities[phraseIntensities[i]]
+			'x': gPhraseIntensities[i],
+			'y': gWindowIntensities[gPhraseIntensities[i]]
 		});
 	}
 	var ctx = document.getElementById('graph');
@@ -301,6 +320,28 @@ function drawGraph(windowIntensities, phraseIntensities) {
 	        options: {}
 	    }
 	});
+}
+
+function showResults() {
+	if (showingCounter) {
+		var x = document.getElementById("counter-container");
+		if (x.style.display != "none") {
+		  x.style.display = "none";
+		}
+		showingCounter = false;
+	}
+
+	if (!showingResults) {
+		var x = document.getElementById("result-container");
+		if (x.style.display === "none") {
+		  x.style.display = "block";
+		}
+		var button = document.getElementById("button-graph");
+		if (button.style.display === "none") {
+		  button.style.display = "inline";
+		}
+		showingResults = true;
+	}
 }
 
 function inputBPM(object) {
